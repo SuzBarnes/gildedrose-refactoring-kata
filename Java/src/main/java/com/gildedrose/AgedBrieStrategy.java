@@ -3,21 +3,21 @@ package com.gildedrose;
 public class AgedBrieStrategy implements ItemStrategy {
 
     public void updateQuality(Item item) {
+
         if (item.quality < 50) {
-            if (item.sellIn <= 0) {
+            if (item.sellIn < 0) {
                 increaseQualityValue(item, 2);
-                return;
+            } else {
+                increaseQualityValue(item, 1);
             }
-            increaseQualityValue(item, 1);
-        } else {
-            item.sellIn--;
         }
+        item.sellIn--;
     }
 
     private void increaseQualityValue(Item item, int rate) {
         item.quality += rate;
-        if(item.quality >50){
-            item.quality =50;
+        if (item.quality > 50) {
+            item.quality = 50;
         }
     }
 }
