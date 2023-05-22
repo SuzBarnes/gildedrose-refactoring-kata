@@ -3,6 +3,7 @@ package com.gildedrose;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GildedRoseTest {
 
@@ -54,7 +55,7 @@ class GildedRoseTest {
     }
 
     @Test
-    public void agedBrieIncreasesInQualityTheOlderItGets() {
+    void agedBrieIncreasesInQualityTheOlderItGets() {
         Item[] items = new Item[]{new Item("Aged Brie", 2, 40)};
         GildedRose app = new GildedRose(items);
         app.updateQuality(); // 2 - 40 , 1 - 41
@@ -65,7 +66,7 @@ class GildedRoseTest {
     }
 
     @Test
-    public void agedBrieCannotBeMoreThanFiftyQualityValue(){
+    void agedBrieCannotBeMoreThanFiftyQualityValue(){
         Item[] items = new Item[]{new Item("Aged Brie", 4, 48)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -75,7 +76,7 @@ class GildedRoseTest {
     }
 
     @Test
-    public void backstagePassQualityDecreasesToZeroAfterConcert() {
+    void backstagePassQualityDecreasesToZeroAfterConcert() {
         Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 1, 20)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -85,7 +86,7 @@ class GildedRoseTest {
     }
 
     @Test
-    public void backstagePassesIncreasesByOneWhenMoreThanTenDays() {
+    void backstagePassesIncreasesByOneWhenMoreThanTenDays() {
         Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -93,7 +94,7 @@ class GildedRoseTest {
     }
 
     @Test
-    public void backstagePassesIncreasesByTwoWhenTenToSixDays() {
+    void backstagePassesIncreasesByTwoWhenTenToSixDays() {
         Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 10, 20)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -102,7 +103,7 @@ class GildedRoseTest {
     }
 
     @Test
-    public void backstagePassesIncreasesByThreeWhenFiveOrLessDays() {
+    void backstagePassesIncreasesByThreeWhenFiveOrLessDays() {
         Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 4, 20)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -110,7 +111,7 @@ class GildedRoseTest {
         assertEquals(26, app.items[0].quality);
     }
     @Test
-    public void backstagePassesCannotBeMoreThanFiftyQualityValue(){
+    void backstagePassesCannotBeMoreThanFiftyQualityValue(){
         Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 4, 48)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -119,7 +120,7 @@ class GildedRoseTest {
     }
 
     @Test
-    public void conjuredDegradeQualityRateTwice() {
+    void conjuredDegradeQualityRateTwice() {
         Item[] items = new Item[]{new Item("Conjured Gantt Chart", 3, 6)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -127,11 +128,50 @@ class GildedRoseTest {
     }
 
     @Test
-    public void conjuredDegradeQualityRateTwiceDoublesBelowZero() {
+   void conjuredDegradeQualityRateTwiceDoublesBelowZero() {
         Item[] items = new Item[]{new Item("Conjured Gantt Chart", 1, 6)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         app.updateQuality();
         assertEquals(0, app.items[0].quality);
+    }
+
+    @Test
+    void checkItemCreatedViaStrategyFactoryIsOfTypeSulfurasStrategy(){
+       StrategyFactory strategyFactory = new StrategyFactory();
+        Item item = new Item("Sulfuras, Hand of Ragnaros", 1, 6);
+        System.out.println(strategyFactory.returnStrategy(item).getClass());
+        assertTrue(strategyFactory.returnStrategy(item) instanceof SulfurasStrategy);
+    }
+
+    @Test
+    void checkItemCreatedViaStrategyFactoryIsOfTypeAgedBrieStrategy(){
+        StrategyFactory strategyFactory = new StrategyFactory();
+        Item item = new Item("Aged Brie", 1, 6);
+        System.out.println(strategyFactory.returnStrategy(item).getClass());
+        assertTrue(strategyFactory.returnStrategy(item) instanceof AgedBrieStrategy);
+    }
+
+    @Test
+    void checkItemCreatedViaStrategyFactoryIsOfTypeGeneralItemStrategy(){
+        StrategyFactory strategyFactory = new StrategyFactory();
+        Item item = new Item("GENERAL ITEM", 1, 6);
+        System.out.println(strategyFactory.returnStrategy(item).getClass());
+        assertTrue(strategyFactory.returnStrategy(item) instanceof GeneralItemStrategy);
+    }
+    @Test
+    void checkItemCreatedViaStrategyFactoryIsOfTypeConjuredStrategy(){
+        StrategyFactory strategyFactory = new StrategyFactory();
+        Item item = new Item("Conjured ", 1, 6);
+        System.out.println(strategyFactory.returnStrategy(item).getClass());
+        assertTrue(strategyFactory.returnStrategy(item) instanceof ConjuredStrategy);
+    }
+
+    @Test
+    void checkItemCreatedViaStrategyFactoryIsOfTypeBackStagePassStrategy(){
+        StrategyFactory strategyFactory = new StrategyFactory();
+        Item item = new Item("Backstage passes ", 1, 6);
+        System.out.println(strategyFactory.returnStrategy(item).getClass());
+        assertTrue(strategyFactory.returnStrategy(item) instanceof BackStagePassStrategy);
     }
 }
